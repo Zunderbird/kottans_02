@@ -1,0 +1,7 @@
+D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm.Tests\obj\Debug\RowReductionAlgorithm.Tests.csprojResolveAssemblyReference.cache
+D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm.Tests\bin\Debug\RowReductionAlgorithm.Tests.dll
+D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm.Tests\bin\Debug\RowReductionAlgorithm.Tests.pdb
+D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm.Tests\bin\Debug\RowReductionAlgorithm.exe
+D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm.Tests\bin\Debug\RowReductionAlgorithm.pdb
+D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm.Tests\obj\Debug\RowReductionAlgorithm.Tests.dll
+D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm.Tests\obj\Debug\RowReductionAlgorithm.Tests.pdb
