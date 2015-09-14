@@ -8,46 +8,38 @@ namespace RowReductionAlgorithm
 {
     public class EquationSolver
     {
-        List<LinearEquation> m_equations;
-        List<Tuple<List<LinearEquation>, string>> m_history;
+        List<LinearEquation> _mEquations;
+        List<Tuple<List<LinearEquation>, string>> _mHistory;
         
-        List<double> m_XVector;
-        List<double> m_errorsVector;
-        
-        int m_coeffCount;
-        bool m_sortZeroOnTop;
+        List<double> _mXVector;
+        List<double> _mErrorsVector;     
 
-        double MAX_EQUATIONS_VALUE = Math.Sqrt(int.MaxValue);
+         double MAX_EQUATIONS_VALUE = Math.Sqrt(int.MaxValue);
+
+        public bool SortZeroOnTop { get; set; }
+        public int CoeffCount { get; private set; }
 
         public void Init(double[,] i_matrix)
         {
-            m_equations = new List<LinearEquation>();
-            m_history = new List<Tuple<List<LinearEquation>, string>>();
-            m_XVector = new List<double>();
-            m_errorsVector = new List<double>();
+            _mEquations = new List<LinearEquation>();
+            _mHistory = new List<Tuple<List<LinearEquation>, string>>();
+            _mXVector = new List<double>();
+            _mErrorsVector = new List<double>();
 
-            m_coeffCount = i_matrix.GetUpperBound(1);
-            m_equations = ConvertToEquations(i_matrix);
+            CoeffCount = i_matrix.GetUpperBound(1);
+            _mEquations = ConvertToEquations(i_matrix);
             
-            m_history.Add(new Tuple<List<LinearEquation>, string>(new List<LinearEquation>(m_equations), 
+            _mHistory.Add(new Tuple<List<LinearEquation>, string>(new List<LinearEquation>(_mEquations), 
                 "Initial linear equation system"));
-            
-            m_sortZeroOnTop = true;
-        }
 
-        public int CoeffCount
-        {
-            get
-            {
-                return m_coeffCount;
-            }
+            SortZeroOnTop = true;
         }
         
         public List<double> XVector
         {
             get
             {
-                return new List<double>(m_XVector);
+                return new List<double>(_mXVector);
             }
         }
 
@@ -55,7 +47,7 @@ namespace RowReductionAlgorithm
         {
             get
             {
-                return new List<double>(m_errorsVector);
+                return new List<double>(_mErrorsVector);
             }
         }
 
@@ -63,19 +55,7 @@ namespace RowReductionAlgorithm
         {
             get
             {
-                return new List<Tuple<List<LinearEquation>,string>>(m_history);
-            }
-        }
-
-        public bool SortZeroOnTop
-        {
-            get
-            {
-                return m_sortZeroOnTop;
-            }
-            set
-            {
-                m_sortZeroOnTop = value;
+                return new List<Tuple<List<LinearEquation>,string>>(_mHistory);
             }
         }
 
@@ -83,21 +63,20 @@ namespace RowReductionAlgorithm
         {
             if (i_matrix.GetUpperBound(1) > 0)
             {
-                List<LinearEquation> _equations = new List<LinearEquation>();
+                var equations = new List<LinearEquation>();
 
                 for (int i = 0; i < i_matrix.GetUpperBound(0) + 1; i++)
                 {
-                    LinearEquation _equation = new LinearEquation();
+                    var equation = new LinearEquation();
 
                     for (int j = 0; j < i_matrix.GetUpperBound(1); j++)
                     {
-                        _equation.AddCoeff(i_matrix[i, j]);
+                        equation.AddCoeff(i_matrix[i, j]);
                     }
-
-                    _equation.Sum = i_matrix[i, i_matrix.GetUpperBound(1)];
-                    _equations.Add(_equation);
+                    equation.Sum = i_matrix[i, i_matrix.GetUpperBound(1)];
+                    equations.Add(equation);
                 }
-                return _equations;
+                return equations;
             }
             else return new List<LinearEquation>();
         }
@@ -106,79 +85,79 @@ namespace RowReductionAlgorithm
         {
             if (i_coeffCount > 0)
             {
-                double[,] _matrix = new double[i_coeffCount, i_coeffCount + 1];
+                double[,] matrix = new double[i_coeffCount, i_coeffCount + 1];
                 for (int i = 0; i < i_equations.Count; i++)
                 {
                     for (int j = 0; j < i_coeffCount; j++)
                     {
-                        _matrix[i, j] = i_equations[i].GetCoeff(j);
+                        matrix[i, j] = i_equations[i].GetCoeff(j);
                     }
-                    _matrix[i, i_coeffCount] = i_equations[i].Sum;
+                    matrix[i, i_coeffCount] = i_equations[i].Sum;
                 }
-                return _matrix;
+                return matrix;
             }
             else return null;
         }
 
-        public bool Swap(int i_firstIndex, int i_secondIndex)
+        private bool Swap(int i_firstIndex, int i_secondIndex)
         {
-            if (i_firstIndex >= m_equations.Count || i_secondIndex >= m_equations.Count) return false;
+            if (i_firstIndex >= _mEquations.Count || i_secondIndex >= _mEquations.Count) return false;
             else
             {
-                LinearEquation _tempEquation = m_equations[i_firstIndex];
-                m_equations[i_firstIndex] = m_equations[i_secondIndex];
-                m_equations[i_secondIndex] = _tempEquation;
+                LinearEquation tempEquation = _mEquations[i_firstIndex];
+                _mEquations[i_firstIndex] = _mEquations[i_secondIndex];
+                _mEquations[i_secondIndex] = tempEquation;
                 return true;
             }
         }
 
         private bool Sort()
         {
-            bool _isOrderChanged = false;
+            bool isOrderChanged = false;
 
-            for (int i = 1; i < m_equations.Count; i++)
+            for (int i = 1; i < _mEquations.Count; i++)
             {
-                if (m_equations[i].FirstNonzeroIndex > 0)
+                if (_mEquations[i].FirstNonzeroIndex > 0)
                     for (int j = 0; j < i; j++)
-                        if (m_equations[i].FirstNonzeroIndex > m_equations[j].FirstNonzeroIndex)
+                        if (_mEquations[i].FirstNonzeroIndex > _mEquations[j].FirstNonzeroIndex)
                         {
                             Swap(i, j);
                             i = j;
-                            _isOrderChanged = true;
+                            isOrderChanged = true;
                             break;
                         }
             }
-            return _isOrderChanged;
+            return isOrderChanged;
         }
 
         private int GetNextIndexForReduce()
         {
             for (int i = 0; i < CoeffCount; i++)
-                for (int j = 0; j < m_equations.Count; j++)
-                    if (i < m_equations.Count - j - 1 && m_equations[j].GetCoeff(i) != 0)
+                for (int j = 0; j < _mEquations.Count; j++)
+                    if (i < _mEquations.Count - j - 1 && _mEquations[j].GetCoeff(i) != 0)
                         return j;
             return -1;
         }
 
-        public void AddRecordToHistory(string i_text)
+        private void AddRecordToHistory(string i_text)
         {
-            List<LinearEquation> _historyEquations = new List<LinearEquation>(m_equations);
-            if (m_sortZeroOnTop == false) _historyEquations.Reverse();
-            m_history.Add(new Tuple<List<LinearEquation>, string>(_historyEquations, i_text));
+            var historyEquations = new List<LinearEquation>(_mEquations);
+            if (SortZeroOnTop == false) historyEquations.Reverse();
+            _mHistory.Add(new Tuple<List<LinearEquation>, string>(historyEquations, i_text));
         }
 
-        public void ReduceCoeffCount()
+        private void ReduceCoeffCount()
         {
-            int _index;
+            int index;
 
             do
             {
                 if (Sort())
                     AddRecordToHistory("Sorted");
 
-                _index = GetNextIndexForReduce();
+                index = GetNextIndexForReduce();
 
-                if (_index != -1)
+                if (index != -1)
                 {
                     //Check for over range and if it is true, normalized values 
 
@@ -187,154 +166,134 @@ namespace RowReductionAlgorithm
 
                     // Deduct one equation from another
 
-                    Tuple<LinearEquation, double, double> _reducedEquation = LinearEquation.Deduct(m_equations[_index], m_equations[_index + 1]);
-                    m_equations[_index] = _reducedEquation.Item1;
+                    Tuple<LinearEquation, double, double> reducedEquation = LinearEquation.Deduct(_mEquations[index], _mEquations[index + 1]);
+                    _mEquations[index] = reducedEquation.Item1;
 
-                    int _historyIndex = _index + 1;
+                    int historyIndex = index + 1;
 
-                    if (m_sortZeroOnTop == false)
-                        _historyIndex = m_equations.Count - _historyIndex;
+                    if (SortZeroOnTop == false)
+                        historyIndex = _mEquations.Count - historyIndex;
 
-                    string _text = "Reduced: equation " + _historyIndex + " * (" + _reducedEquation.Item2 +
-                                ") - equation " + (_historyIndex + 1) + " * (" + _reducedEquation.Item3 + ")";
+                    string _text = "Reduced: equation " + historyIndex + " * (" + reducedEquation.Item2 +
+                                ") - equation " + (historyIndex + 1) + " * (" + reducedEquation.Item3 + ")";
                     AddRecordToHistory(_text);
-
                 }
-            } while (_index != -1);
+            } while (index != -1);
         }    
 
         public string Solve()
         {
-            if (m_equations.Count != 0)
+            if (_mEquations.Count != 0)
             {
-                if (m_sortZeroOnTop == false) m_equations.Reverse();
+                if (SortZeroOnTop == false) _mEquations.Reverse();
 
                 ReduceCoeffCount();
 
-                if (!this.isCompatible()) return "There are no solutions!";
-                if (!this.isUniqueSolution()) return "There are infinitely many solutions!";
+                if (!this.IsCompatible()) return "There are no solutions!";
+                if (!this.IsUniqueSolution()) return "There are infinitely many solutions!";
 
-                m_XVector = CalcXVector();
-                m_errorsVector = CalcErrorsVector();
+                _mXVector = CalcXVector();
+                _mErrorsVector = CalcErrorsVector();
 
-                return "There is unique solution!";
-                
+                return "There is unique solution!";               
             }
             return "Entering matrix is empty!";
         }
 
-        public List<double> CalcXVector()
+        private List<double> CalcXVector()
         {
-            List<double> _XVector = new List<double>();
+            var XVector = new List<double>();
 
-            if (m_equations.Count >= CoeffCount)
+            if (_mEquations.Count >= CoeffCount)
             {
-                for (int i = 0; i < m_equations.Count; i++)
+                for (int i = 0; i < _mEquations.Count; i++)
                 {
-                    double _valuesSum = ValuesSum(_XVector);
-                    double _value = (m_equations[i].Sum - _valuesSum) / m_equations[i].GetCoeff(CoeffCount - 1 - i);
-                    _XVector.Add(_value);
+                    double valuesSum = ValuesSum(XVector);
+                    double value = (_mEquations[i].Sum - valuesSum) / _mEquations[i].GetCoeff(CoeffCount - 1 - i);
+                    XVector.Add(value);
                 }
-                _XVector.Reverse();
+                XVector.Reverse();
             }
-            return _XVector;
+            return XVector;
         }
 
         private double ValuesSum(List<double> i_result)
         {
-            double _sum = 0;
+            double sum = 0;
 
             for (int i = 0; i < i_result.Count; i++)
             {
-                _sum += i_result[i] * m_equations[i_result.Count].GetCoeff(CoeffCount - i - 1);
+                sum += i_result[i] * _mEquations[i_result.Count].GetCoeff(CoeffCount - i - 1);
             }
-            return _sum;
+            return sum;
         }
 
-        public List<double> CalcErrorsVector()
+        private List<double> CalcErrorsVector()
         {
-            List<double> _errorsVector = new List<double>();
+            var errorsVector = new List<double>();
 
-            List<LinearEquation> _initialEquations = m_history[0].Item1;
+            var initialEquations = new List<LinearEquation>(_mHistory[0].Item1);
 
-            foreach (LinearEquation _equation in _initialEquations)
+            foreach (LinearEquation equation in initialEquations)
             {
-                double _sum = 0;
+                double sum = 0;
 
-                for (int i = 0; i < _equation.CoeffCount; i++)
+                for (int i = 0; i < equation.CoeffCount; i++)
                 {
-                    _sum += m_XVector[i] * _equation.GetCoeff(i);
+                    sum += _mXVector[i] * equation.GetCoeff(i);
                 }
-                _errorsVector.Add(_equation.Sum - _sum);
+                errorsVector.Add(equation.Sum - sum);
             }
-            return _errorsVector;
+            return errorsVector;
         }
 
-        public bool NormalizeValues()
+        private bool NormalizeValues()
         {
-            bool _isDone = false;
+            bool isDone = false;
 
-            foreach (LinearEquation _equation in m_equations)
+            foreach (LinearEquation equation in _mEquations)
             {
-                if (_equation.MaxAbsCoeff() >= MAX_EQUATIONS_VALUE || Math.Abs(_equation.Sum) >= MAX_EQUATIONS_VALUE)
+                if (equation.MaxAbsCoeff() >= MAX_EQUATIONS_VALUE || Math.Abs(equation.Sum) >= MAX_EQUATIONS_VALUE)
                 {
-                    _equation.ReduceNumbers();
-                    _isDone = true;
+                    equation.ReduceNumbers();
+                    isDone = true;
                 }
             }
-            return _isDone;
-
+            return isDone;
         }
 
-        public bool isCompatible()
+        private bool IsCompatible()
         {
-            foreach (LinearEquation _equation in m_equations)
+            foreach (LinearEquation equation in _mEquations)
             {
-                if (_equation.isCompatible() == false)
+                if (equation.IsCompatible() == false)
                     return false;
             }
             return true;
         }
 
-        public bool isUniqueSolution()
+        private bool IsUniqueSolution()
         {
-            int _nullEqCounter = 0;
+            int nullEqCounter = 0;
 
-            foreach (LinearEquation _equation in m_equations)
+            foreach (LinearEquation equation in _mEquations)
             {
-                if (_equation.isNulls() == true)
-                    _nullEqCounter++;
+                if (equation.IsNulls() == true)
+                    nullEqCounter++;
             }
-            return (m_equations.Count - _nullEqCounter >= CoeffCount);
+            return (_mEquations.Count - nullEqCounter >= CoeffCount);
         }
 
         public static int MaxCoeffCount(List<LinearEquation> i_equations)
         {
-            int _maxCoeffCount = 0;
+            int maxCoeffCount = 0;
 
-            foreach (LinearEquation _equation in i_equations)
+            foreach (LinearEquation equation in i_equations)
             {
-                if ( _maxCoeffCount < _equation.CoeffCount) 
-                    _maxCoeffCount = _equation.CoeffCount;
+                if ( maxCoeffCount < equation.CoeffCount) 
+                    maxCoeffCount = equation.CoeffCount;
             }
-            return _maxCoeffCount;
+            return maxCoeffCount;
         }
-
-        public static void PrintToConsole(List <LinearEquation> i_equations, string i_text)
-        {
-            Console.WriteLine(i_text);
-            foreach (LinearEquation _linear in i_equations)
-            {
-                for (int i = 0; i < _linear.CoeffCount; i++)
-                {
-                    Console.Write("{0}\t", _linear.GetCoeff(i));
-                }
-                Console.Write("{0}\t", _linear.Sum);
-                Console.WriteLine();
-            }
-        }
-
-        
-
     }
 }

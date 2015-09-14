@@ -8,7 +8,7 @@ namespace RowReductionAlgorithm.Tests
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Init_EquationSolver_should_return_message_if_matrix_is_empty()
         {
             double[,] _matrix = { { } };
 
@@ -19,7 +19,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void Init_EquationSolver_should_return_message_about_unique_solution()
         {
             double[,] _matrix = { {-3, 4, 1, 4, -1},
                                 {0, 1, 3, 2, -1},
@@ -33,7 +33,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod3()
+        public void Init_EquationSolver_should_return_message_about_many_solutions()
         {
             double[,] _matrix = { {-3, 4, 1, 4, -1},
                                 {0, 1, 3, 2, -1},
@@ -47,7 +47,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod4()
+        public void Init_EquationSolver_should_return_message_about_infinitely_many_solutions()
         {
             double[,] _matrix = { {-3, 4, 1, 4, -1, 6},
                                 {0, 1, 3, 2, -1, 1},
@@ -61,7 +61,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod5()
+        public void Init_EquationSolver_should_return_message_about_no_solutions()
         {
             double[,] _matrix = { {-3, 4, 1, 4, -1},
                                 {0, 1, 3, 2, -1},
@@ -75,7 +75,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod6()
+        public void Init_EquationSolver_should_return_message_about_no_solutions2()
         {
             double[,] _matrix = { {-3, 4, 1, 4, -1},
                                 {0, 1, 3, 2, -1},
@@ -91,7 +91,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod7()
+        public void Init_EquationSolver_should_return_message_about_no_solutions3()
         {
             double[,] _matrix = { {-3, 4, 1, 4, -1},
                                 {0, 1, 3, 2, -1},
@@ -106,7 +106,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod8()
+        public void Init_EquationSolver_should_return_message_about_unique_solution2()
         {
             double[,] _matrix = { {78, 53, 97, 43, 69, 86},
                                 {73, 94, 3, 90, 4, 77},
@@ -121,7 +121,7 @@ namespace RowReductionAlgorithm.Tests
         }
 
         [TestMethod]
-        public void TestMethod9()
+        public void Init_EquationSolver_should_return_message_about_unique_solution3()
         {
             double[,] _matrix = { {8432, 4825, 4305, 6171},
                                 {643, 4399, 7976, 0},

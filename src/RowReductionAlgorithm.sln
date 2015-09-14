@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RowReductionAlgorithm", "RowReductionAlgorithm\RowReductionAlgorithm.csproj", "{5FD7AB16-FC51-4D4B-888F-DFD1FAF17C36}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RowReductionView", "RowReductionView\RowReductionView.csproj", "{2362E18E-5C00-433B-AE63-1FA8C918B672}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RowReductionAlgorithm.Tests", "RowReductionAlgorithm.Tests\RowReductionAlgorithm.Tests.csproj", "{B9F54B8A-674C-4B7C-AADF-17C1AA61B01A}"
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5FD7AB16-FC51-4D4B-888F-DFD1FAF17C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FD7AB16-FC51-4D4B-888F-DFD1FAF17C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FD7AB16-FC51-4D4B-888F-DFD1FAF17C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FD7AB16-FC51-4D4B-888F-DFD1FAF17C36}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2362E18E-5C00-433B-AE63-1FA8C918B672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2362E18E-5C00-433B-AE63-1FA8C918B672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2362E18E-5C00-433B-AE63-1FA8C918B672}.Release|Any CPU.ActiveCfg = Release|Any CPU

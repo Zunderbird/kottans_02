@@ -10,7 +10,7 @@ namespace RowReductionView
 {
     static class Maintainer
     {
-        private static double[,] m_defaultMatrix = { { -3, 4, 1, 4, -1},
+        private static double[,] _mDefaultMatrix = { { -3, 4, 1, 4, -1},
                                                      { 0, 1, 3, 2, -1},
                                                      { 4, 0, -2, -3, 4},
                                                      { 1000, 3, 1, -5, -2}};
@@ -18,18 +18,18 @@ namespace RowReductionView
         {
             get
             {
-                return (double [,]) m_defaultMatrix.Clone();
+                return (double [,]) _mDefaultMatrix.Clone();
             }
         }
 
         public static DataGridViewColumn NextColumn(string i_headerName)
         {
-            DataGridViewTextBoxColumn _column = new DataGridViewTextBoxColumn();
-            _column.HeaderText = i_headerName;
-            _column.CellTemplate = new DataGridViewTextBoxCell();
-            _column.MaxInputLength = 4;
+            var column = new DataGridViewTextBoxColumn();
+            column.HeaderText = i_headerName;
+            column.CellTemplate = new DataGridViewTextBoxCell();
+            column.MaxInputLength = 4;
 
-            return _column;
+            return column;
 
         }
 
@@ -163,41 +163,41 @@ namespace RowReductionView
 
         public static char ConvertForInt(char i_character)
         {
-            char _character = i_character;
-            if (!Char.IsDigit(_character) && _character != 8 &&  _character != '-')
-                _character = Convert.ToChar((char)0);
+            char character = i_character;
+            if (!Char.IsDigit(character) && character != 8 &&  character != '-')
+                character = Convert.ToChar((char)0);
 
-            return _character;
+            return character;
         }
 
         public static char ConvertForDouble(char i_character)
         {
-            char _character = i_character;
-            if (_character == '.')
-                _character = Convert.ToChar(',');
-            else if (!Char.IsDigit(_character) && _character != 8 && _character != ',' && _character != '-')
+            char character = i_character;
+            if (character == '.')
+                character = Convert.ToChar(',');
+            else if (!Char.IsDigit(character) && character != 8 && character != ',' && character != '-')
             {
-                _character = Convert.ToChar((char)0);
+                character = Convert.ToChar((char)0);
             }
-            return _character;
+            return character;
         }
 
         public static double[,] ReadMatrix(DataGridView i_table)
         {
-            double[,] _inputData = new double[i_table.RowCount, i_table.ColumnCount];
+            var inputData = new double[i_table.RowCount, i_table.ColumnCount];
 
             for (int i = 0; i < i_table.RowCount; i++)
                 for (int j = 0; j < i_table.ColumnCount; j++)
                 {
                     if (i_table[j, i].Value == null)
-                        _inputData[i, j] = 0;
+                        inputData[i, j] = 0;
                     else
-                        _inputData[i, j] = Convert.ToDouble(EditValue(i_table[j, i].Value.ToString()));
+                        inputData[i, j] = Convert.ToDouble(EditValue(i_table[j, i].Value.ToString()));
 
-                    i_table[j, i].Value = _inputData[i, j];
+                    i_table[j, i].Value = inputData[i, j];
 
                 }
-            return _inputData;
+            return inputData;
         }
 
         public static string EditValue(string i_text)
@@ -215,7 +215,7 @@ namespace RowReductionView
 
         public static double[,] GenerateRandMatrix(DataGridView i_table, bool i_isRandSize)
         {
-            Random rnd = new Random();
+            var rnd = new Random();
 
             if (i_isRandSize)
             {
@@ -223,21 +223,21 @@ namespace RowReductionView
                 i_table.ColumnCount = i_table.RowCount + 1;
             }
 
-            double[,] _randMatrix = new double[i_table.RowCount, i_table.ColumnCount];
+            var randMatrix = new double[i_table.RowCount, i_table.ColumnCount];
 
             for (int i = 0; i < i_table.RowCount; i++)
                 for (int j = 0; j < i_table.ColumnCount; j++)
                 {
                     if (rnd.Next() % 100 < RandSettStor.RatioOfZero) 
-                        _randMatrix[i, j] = 0;
+                        randMatrix[i, j] = 0;
 
                     else if (RandSettStor.IsDoubleValue)
-                        _randMatrix[i, j] = Math.Round(rnd.NextDouble() * 100 % (RandSettStor.MaxValue - RandSettStor.MinValue + 1) + RandSettStor.MinValue, 2);
+                        randMatrix[i, j] = Math.Round(rnd.NextDouble() * 100 % (RandSettStor.MaxValue - RandSettStor.MinValue + 1) + RandSettStor.MinValue, 2);
 
-                    else _randMatrix[i, j] = rnd.Next() % (RandSettStor.MaxValue - RandSettStor.MinValue + 1) + RandSettStor.MinValue;
+                    else randMatrix[i, j] = rnd.Next() % (RandSettStor.MaxValue - RandSettStor.MinValue + 1) + RandSettStor.MinValue;
 
                 }
-            return _randMatrix;
+            return randMatrix;
         }
 
     }

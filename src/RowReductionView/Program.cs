@@ -9,12 +9,12 @@ namespace RowReductionView
 {
     static class Program
     {
-        static EquationSolver m_solver;
+        static EquationSolver _mSolver;
         public static EquationSolver Solver
         {
             get
             {
-                return m_solver;
+                return _mSolver;
             }
         }
         /// <summary>
@@ -23,11 +23,11 @@ namespace RowReductionView
         [STAThread]
         static void Main()
         {
-            m_solver = new EquationSolver();
+            _mSolver = new EquationSolver();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form1 _mainForm = new Form1();
+            var _mainForm = new Form1();
             _mainForm.StartPosition = FormStartPosition.CenterScreen;
             Application.Run(_mainForm);
             

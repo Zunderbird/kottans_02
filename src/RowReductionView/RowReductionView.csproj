@@ -93,12 +93,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RowReductionAlgorithm\RowReductionAlgorithm.csproj">
-      <Project>{5fd7ab16-fc51-4d4b-888f-dfd1faf17c36}</Project>
-      <Name>RowReductionAlgorithm</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="rand24.png" />
   </ItemGroup>
   <ItemGroup>

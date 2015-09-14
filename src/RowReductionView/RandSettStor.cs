@@ -8,7 +8,7 @@ namespace RowReductionView
 {
     public sealed class RandSettStor
     {
-        private static readonly RandSettStor m_instance = new RandSettStor();
+        private static readonly RandSettStor _mInstance = new RandSettStor();
 
         public static int MinValue { get; set;}
         public static int MaxValue { get; set; }
@@ -29,7 +29,7 @@ namespace RowReductionView
             MaxDimension = 9;
         }
 
-        public static RandSettStor Instance { get { return m_instance; } }
+        public static RandSettStor Instance { get { return _mInstance; } }
     }
 
     

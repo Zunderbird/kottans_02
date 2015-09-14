@@ -1,6 +1,0 @@
-D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm\bin\Release\RowReductionAlgorithm.exe.config
-D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm\bin\Release\RowReductionAlgorithm.exe
-D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm\bin\Release\RowReductionAlgorithm.pdb
-D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm\obj\Release\RowReductionAlgorithm.csprojResolveAssemblyReference.cache
-D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm\obj\Release\RowReductionAlgorithm.exe
-D:\Ruslana\Github\kottans_02\RowReductionAlgorithm\RowReductionAlgorithm\obj\Release\RowReductionAlgorithm.pdb
