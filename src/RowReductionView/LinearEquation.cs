@@ -115,6 +115,7 @@ namespace RowReductionAlgorithm
             }
             return null;
         }
+
         private static bool IsInteger(double i_number)
         {
             return i_number - Math.Truncate(i_number) == 0;

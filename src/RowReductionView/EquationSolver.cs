@@ -17,6 +17,8 @@ namespace RowReductionAlgorithm
          double MAX_EQUATIONS_VALUE = Math.Sqrt(int.MaxValue);
 
         public bool SortZeroOnTop { get; set; }
+        public bool ReduceByMainElement { get; set; }
+
         public int CoeffCount { get; private set; }
 
         public void Init(double[,] i_matrix)
@@ -33,6 +35,7 @@ namespace RowReductionAlgorithm
                 "Initial linear equation system"));
 
             SortZeroOnTop = true;
+            ReduceByMainElement = true;
         }
         
         public List<double> XVector
@@ -99,6 +102,25 @@ namespace RowReductionAlgorithm
             else return null;
         }
 
+        public static int MaxCoeffCount(List<LinearEquation> i_equations)
+        {
+            int maxCoeffCount = 0;
+
+            foreach (LinearEquation equation in i_equations)
+            {
+                if (maxCoeffCount < equation.CoeffCount)
+                    maxCoeffCount = equation.CoeffCount;
+            }
+            return maxCoeffCount;
+        }
+
+        private void AddRecordToHistory(string i_text)
+        {
+            var historyEquations = new List<LinearEquation>(_mEquations);
+            if (SortZeroOnTop == false) historyEquations.Reverse();
+            _mHistory.Add(new Tuple<List<LinearEquation>, string>(historyEquations, i_text));
+        }
+
         private bool Swap(int i_firstIndex, int i_secondIndex)
         {
             if (i_firstIndex >= _mEquations.Count || i_secondIndex >= _mEquations.Count) return false;
@@ -111,7 +133,56 @@ namespace RowReductionAlgorithm
             }
         }
 
-        private bool Sort()
+        private void Reduce(int i_firstIndex, int i_second_index)
+        {
+            var reducedEquation = LinearEquation.Deduct(_mEquations[i_firstIndex], _mEquations[i_second_index]);
+
+            _mEquations[i_firstIndex] = reducedEquation.Item1;
+
+            int historyIndex = i_second_index;
+
+            if (SortZeroOnTop == false)
+                historyIndex = _mEquations.Count - historyIndex;
+
+            string _text = "Reduced: equation " + historyIndex + " * (" + reducedEquation.Item2 +
+                        ") - equation " + (historyIndex + 1) + " * (" + reducedEquation.Item3 + ")";
+            AddRecordToHistory(_text);
+        }
+
+        private int GetMainElementIndex(int i_unknownIndex, int i_count)
+        {
+            int index = 0;
+            for (int i = 0; i < i_count; i++)
+            {
+                if (Math.Abs(_mEquations[index].GetCoeff(i_unknownIndex)) < Math.Abs(_mEquations[i].GetCoeff(i_unknownIndex)))
+                {
+                    index = i;
+                }
+            }
+            return index;
+        }
+
+        private void ReduceByMainElements()
+        {
+            for (int i = 0; i < this.CoeffCount; i++)
+            {
+                int mainIndex = this.GetMainElementIndex(i, _mEquations.Count - i);
+
+                for (int j = 0; j < _mEquations.Count - i; j++)
+                {
+                    if (j != mainIndex && _mEquations[j].GetCoeff(i) != 0)
+                    {
+                        if (NormalizeValues())
+                            AddRecordToHistory("Normalized");
+                        Reduce(j, mainIndex);
+                    }
+                }
+                Swap(mainIndex, _mEquations.Count - i - 1);
+                AddRecordToHistory("Swap");
+            }
+        }
+
+        private bool SortByZero()
         {
             bool isOrderChanged = false;
 
@@ -139,20 +210,13 @@ namespace RowReductionAlgorithm
             return -1;
         }
 
-        private void AddRecordToHistory(string i_text)
-        {
-            var historyEquations = new List<LinearEquation>(_mEquations);
-            if (SortZeroOnTop == false) historyEquations.Reverse();
-            _mHistory.Add(new Tuple<List<LinearEquation>, string>(historyEquations, i_text));
-        }
-
-        private void ReduceCoeffCount()
+        private void ReduceByCoeffCount()
         {
             int index;
 
             do
             {
-                if (Sort())
+                if (SortByZero())
                     AddRecordToHistory("Sorted");
 
                 index = GetNextIndexForReduce();
@@ -166,17 +230,7 @@ namespace RowReductionAlgorithm
 
                     // Deduct one equation from another
 
-                    Tuple<LinearEquation, double, double> reducedEquation = LinearEquation.Deduct(_mEquations[index], _mEquations[index + 1]);
-                    _mEquations[index] = reducedEquation.Item1;
-
-                    int historyIndex = index + 1;
-
-                    if (SortZeroOnTop == false)
-                        historyIndex = _mEquations.Count - historyIndex;
-
-                    string _text = "Reduced: equation " + historyIndex + " * (" + reducedEquation.Item2 +
-                                ") - equation " + (historyIndex + 1) + " * (" + reducedEquation.Item3 + ")";
-                    AddRecordToHistory(_text);
+                    Reduce(index, index + 1);
                 }
             } while (index != -1);
         }    
@@ -187,7 +241,8 @@ namespace RowReductionAlgorithm
             {
                 if (SortZeroOnTop == false) _mEquations.Reverse();
 
-                ReduceCoeffCount();
+                if (ReduceByMainElement) ReduceByMainElements();
+                else ReduceByCoeffCount();
 
                 if (!this.IsCompatible()) return "There are no solutions!";
                 if (!this.IsUniqueSolution()) return "There are infinitely many solutions!";
@@ -282,18 +337,6 @@ namespace RowReductionAlgorithm
                     nullEqCounter++;
             }
             return (_mEquations.Count - nullEqCounter >= CoeffCount);
-        }
-
-        public static int MaxCoeffCount(List<LinearEquation> i_equations)
-        {
-            int maxCoeffCount = 0;
-
-            foreach (LinearEquation equation in i_equations)
-            {
-                if ( maxCoeffCount < equation.CoeffCount) 
-                    maxCoeffCount = equation.CoeffCount;
-            }
-            return maxCoeffCount;
         }
     }
 }

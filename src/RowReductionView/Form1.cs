@@ -19,6 +19,7 @@ namespace RowReductionView
         {
             InitializeComponent();
             comboBox1.SelectedIndex = 0;
+            comboBox2.SelectedIndex = 0;
             button_solve.Enabled = false;
             numericUpDown1.Maximum = MAX_EQUATIONS_COUNT;
             toolStripStatusLabel2.Text = "Enter the matrix ;)";
@@ -29,6 +30,7 @@ namespace RowReductionView
         {
             Program.Solver.Init(Maintainer.ReadMatrix(dataGridView1));
             Program.Solver.SortZeroOnTop = (comboBox1.SelectedIndex == 0);
+            Program.Solver.ReduceByMainElement = (comboBox2.SelectedIndex == 0);
 
             toolStripStatusLabel2.Text = Program.Solver.Solve();
             statusStrip1.Refresh();
